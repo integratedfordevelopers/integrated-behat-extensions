@@ -1,0 +1,29 @@
+{
+    "name": "integrated/integrated-behat-extensions",
+    "license": "MIT",
+    "type": "library",
+    "description": "Integrated Behat extensions for FeatureContext files",
+    "authors": [
+        {
+            "name": "e-Active",
+            "homepage": "http://www.e-active.nl"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Integrated\\Behat\\": ""
+        }
+    },
+    "require": {
+        "phpunit/phpunit": "^5.7",
+        "behat/mink-extension": "^2.2",
+        "behat/mink-browserkit-driver": "^1.3",
+        "behat/symfony2-extension": "^2.1"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.8",
+        "phpunit/phpunit": "^5.7"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
