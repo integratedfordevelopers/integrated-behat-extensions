@@ -1,5 +1,5 @@
 {
-    "name": "integrated/integrated-behat-extensions",
+    "name": "integrated/behat-extensions",
     "license": "MIT",
     "type": "library",
     "description": "Integrated Behat extensions for FeatureContext files",
