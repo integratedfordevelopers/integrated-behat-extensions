@@ -10,9 +10,7 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Integrated\\Behat\\": ""
-        }
+        "psr-0": { "": "src/" }
     },
     "require": {
         "phpunit/phpunit": "^5.7",
