@@ -12,7 +12,7 @@ This bundle can be installed following these steps:
 
 ### Install using composer ###
 
-    $ php composer.phar require integrated/integrated/integrated-behat-extensions:master
+    $ php composer.phar require integrated/integrated-behat-extensions:master
     
 ### Configuration ###
 The extensions require a autoload path to be defined in the configuration of Behat.
