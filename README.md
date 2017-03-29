@@ -13,6 +13,17 @@ This bundle can be installed following these steps:
 ### Install using composer ###
 
     $ php composer.phar require integrated/integrated/integrated-behat-extensions:master
+    
+### Configuration ###
+The extensions require a autoload path to be defined in the configuration of Behat.
+
+    // behat.yml
+    default:
+        ...
+        autoload:
+            "" : %paths.base%/features/bootstrap
+            "Integrated\\Behat" : %paths.base%/vendor/integrated/behat-extensions/src
+    ...
 
 ## Using Extensions ##
 All extensions that enhance your FeatureContext class are in the Extension folder of the project.
