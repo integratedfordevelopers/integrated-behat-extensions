@@ -20,9 +20,10 @@ use Behat\Mink\Session;
 trait OverviewIntegrated
 {
     /**
+     * @param null $name
      * @return Session
      */
-    public abstract function getSession();
+    public abstract function getSession($name = null);
 
     /**
      * @When /^I am click icon "([^"]*)"$/

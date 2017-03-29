@@ -20,9 +20,10 @@ use Behat\Mink\Session;
 trait NavigationIntegrated
 {
     /**
+     * @param null $name
      * @return Session
      */
-    public abstract function getSession();
+    public abstract function getSession($name = null);
 
     /**
      * @Given /^I am going to create a "([^"]*)"$/
