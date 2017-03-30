@@ -12,7 +12,28 @@ This bundle can be installed following these steps:
 
 ### Install using composer ###
 
-    $ php composer.phar require integrated/behat-extensions:master
+    $ composer require integrated/integrated-behat-extensions:master
+    
+### Configuration ###
+The extensions require a autoload path to be defined in the configuration of Behat.
+
+    // behat.yml
+    default:
+        ...
+        autoload:
+            "" : %paths.base%/features/bootstrap
+            "Integrated\\Behat" : %paths.base%/vendor/integrated/behat-extensions/src
+    ...
+    
+In order to be able to catch mails send from the Symfony application the spool of Swiftmailer must be written to a directory.
+    
+    // app/config/config_test.yml
+    ...
+    swiftmailer:
+        disable_delivery: true
+        spool:
+            type: file
+            path: %kernel.cache_dir%/spool
 
 ## Using Extensions ##
 All extensions that enhance your FeatureContext class are in the Extension folder of the project.
