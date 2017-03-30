@@ -12,7 +12,7 @@ This bundle can be installed following these steps:
 
 ### Install using composer ###
 
-    $ php composer.phar require integrated/integrated/integrated-behat-extensions:master
+    $ php composer.phar require integrated/behat-extensions:master
 
 ## Using Extensions ##
 All extensions that enhance your FeatureContext class are in the Extension folder of the project.
