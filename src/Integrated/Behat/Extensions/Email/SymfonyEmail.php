@@ -53,26 +53,43 @@ trait SymfonyEmail
                 ->ignoreDotFiles(true)
                 ->files();
 
+            $file = null;
+
             /** @var \SplFileInfo $file */
-            foreach ($finder as $file) {
+            foreach ($finder as $spoolFile) {
                 /** @var Swift_Message $message */
-                $message = unserialize(file_get_contents($file));
+                $message = unserialize(file_get_contents($spoolFile));
 
                 $sender = $message->getFrom();
                 if (isset($sender[$from]) && $message->getSubject() === $subject) {
-                    unlink($file->getPathname());
+                    // Keep the mail to remove it
+                    $file = $spoolFile;
+
+                    // Get out the loop
+                    break;
                 }
             }
-        }
 
-        // We've failed our test
-        throw new ExpectationException(
-            sprintf(
-                'No mail from %s with subject %s found.',
-                $from,
-                $subject
-            ),
-            $this->getSession()->getDriver()
-        );
+            if ($file) {
+                // Remove the email, it has been asserted
+                unlink($file->getPathname());
+            } else {
+                // We've failed our test
+                throw new ExpectationException(
+                    sprintf(
+                        'No mail from %s with subject %s found.',
+                        $from,
+                        $subject
+                    ),
+                    $this->getSession()->getDriver()
+                );
+            }
+        } else {
+            // We've failed our test
+            throw new ExpectationException(
+                'There is no spooler directory, did you add the configuration from the README.md in the config_test.yml?',
+                $this->getSession()->getDriver()
+            );
+        }
     }
 }
