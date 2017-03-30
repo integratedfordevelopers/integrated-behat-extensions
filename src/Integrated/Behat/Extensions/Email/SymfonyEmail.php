@@ -58,7 +58,8 @@ trait SymfonyEmail
                 /** @var Swift_Message $message */
                 $message = unserialize(file_get_contents($file));
 
-                if ($message->getFrom() === $from && $message->getSubject() === $subject) {
+                $sender = $message->getFrom();
+                if (isset($sender[$from]) && $message->getSubject() === $subject) {
                     unlink($file->getPathname());
                 }
             }
