@@ -27,7 +27,7 @@ trait OverviewIntegrated
     public abstract function getSession($name = null);
 
     /**
-     * @Then The page must have a paginator
+     * @Then the page must have a paginator
      *
      * @throws \Behat\Mink\Exception\ExpectationException
      */
