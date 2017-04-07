@@ -28,6 +28,7 @@ trait OverviewIntegrated
 
     /**
      * @Then The page must have a paginator
+     *
      * @throws \Behat\Mink\Exception\ExpectationException
      */
     public function thePageHasAPaginator()
