@@ -27,6 +27,25 @@ trait OverviewIntegrated
     public abstract function getSession($name = null);
 
     /**
+     * @Then The page must have a paginator
+     * @throws \Behat\Mink\Exception\ExpectationException
+     */
+    public function thePageHasAPaginator()
+    {
+        $nodeElement = $this->getSession()->getPage()->find(
+            'xpath',
+            '//ul[@class="pagination"]'
+        );
+
+        if (null == $nodeElement) {
+            throw new ExpectationException(
+                'No pagination found on the page (//ul[@class="pagination"])',
+                $this->getSession()->getDriver()
+            );
+        }
+    }
+
+    /**
      * @When /^I click the first icon "([^"]*)"$/
      *
      * @param string $class
