@@ -45,7 +45,7 @@ trait OverviewIntegrated
      */
     public function clickLastIcon($class)
     {
-        $this->clickNode(sprintf('//span[@class="glyphicon %s"][last()]/parent::a', $class));
+        $this->clickNode(sprintf('(//span[@class="glyphicon %s"])[last()]/parent::a', $class));
     }
 
     /**
