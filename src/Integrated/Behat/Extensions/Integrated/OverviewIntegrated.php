@@ -11,6 +11,7 @@
 
 namespace Integrated\Behat\Extensions\Integrated;
 
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Session;
 
@@ -26,20 +27,56 @@ trait OverviewIntegrated
     public abstract function getSession($name = null);
 
     /**
-     * @When /^I am click icon "([^"]*)"$/
+     * @Then the page must have a paginator
+     *
+     * @throws \Behat\Mink\Exception\ExpectationException
+     */
+    public function thePageHasAPaginator()
+    {
+        $nodeElement = $this->getSession()->getPage()->find(
+            'xpath',
+            '//ul[@class="pagination"]'
+        );
+
+        if (0 === count($nodeElement)) {
+            throw new ExpectationException(
+                'No pagination found on the page (//ul[@class="pagination"])',
+                $this->getSession()->getDriver()
+            );
+        }
+    }
+
+    /**
+     * @When /^I click the first icon "([^"]*)"$/
      *
      * @param string $class
      * @throws ExpectationException
      */
-    public function clickIcon($class)
+    public function clickFirstIcon($class)
     {
-        /** @var \Behat\Mink\Element\NodeElement $link */
-        $link = $this->getSession()->getPage()->find(
-            'xpath',
-            sprintf('//span[@class="glyphicon %s"]/parent::a', $class)
-        );
+        $this->clickNode(sprintf('//span[@class="glyphicon %s"]/parent::a', $class));
+    }
 
-        if (null === $link) {
+    /**
+     * @When /^I click the last icon "([^"]*)"$/
+     *
+     * @param string $class
+     * @throws ExpectationException
+     */
+    public function clickLastIcon($class)
+    {
+        $this->clickNode(sprintf('(//span[@class="glyphicon %s"])[last()]/parent::a', $class));
+    }
+
+    /**
+     * @param string $xpath
+     * @throws ExpectationException
+     */
+    protected function clickNode($xpath)
+    {
+        $nodeElement = $this->getSession()->getPage()->find('xpath', $xpath);
+
+        if (null === $nodeElement) {
             // Yikes! No icon
             throw new ExpectationException(
                 sprintf('The icon with class %s can not be found.', $class),
@@ -47,6 +84,6 @@ trait OverviewIntegrated
             );
         }
 
-        $link->click();
+        $nodeElement->click();
     }
 }
