@@ -69,6 +69,24 @@ trait OverviewIntegrated
     }
 
     /**
+     * @When /^I click the icon "([^"]*)" in the row "([^"]*)"$/
+     *
+     * @param string $class
+     * @param string $text
+     * @throws ExpectationException
+     */
+    public function clickIcon($class, $text)
+    {
+        $this->clickNode(
+            sprintf(
+                '//section/table//tr//td[text()="%s"]/parent::tr/td/a/span[@class="glyphicon %s"]/parent::a',
+                $text,
+                $class
+            )
+        );
+    }
+
+    /**
      * @param string $xpath
      * @throws ExpectationException
      */
@@ -79,7 +97,7 @@ trait OverviewIntegrated
         if (null === $nodeElement) {
             // Yikes! No icon
             throw new ExpectationException(
-                sprintf('The icon with class %s can not be found.', $class),
+                sprintf('The icon with class %s can not be found.', $xpath),
                 $this->getSession()->getDriver()
             );
         }
