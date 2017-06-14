@@ -31,7 +31,7 @@ trait SymfonyLogin
     public abstract function getSession($name = null);
 
     /**
-     * @Given /^I am authenticated as "([^"]*)"$/
+     * @Given /^I am authenticated as "([^\s]|[^\ ]*)"$
      *
      * @param string $username
      * @throws UnsupportedDriverActionException
