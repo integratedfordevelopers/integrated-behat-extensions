@@ -63,8 +63,9 @@ trait Text
             // We should only have one element
             throw new ExpectationException(
                 sprintf(
-                    'The xpath %s returned more than one result on %s',
+                    'The xpath %s returned %d results on %s',
                     $xpath,
+                    is_null($result) ? 0 : count($result),
                     $this->getSession()->getCurrentUrl()
                 ),
                 $this->getSession()->getDriver()
