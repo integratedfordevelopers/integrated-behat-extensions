@@ -22,10 +22,6 @@ class ReformatRegex
      */
     public static function spaceTabsEqual($regex)
     {
-        return str_replace(
-            ' ',
-            '[\ ]*|[\t]*',
-            $regex
-        );
+        return str_replace(' ', '[\s\t]+', $regex);
     }
 }

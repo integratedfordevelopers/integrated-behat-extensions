@@ -11,7 +11,6 @@
 
 namespace Integrated\Behat\Extensions\DOM;
 
-use Integrated\Behat\Helper\DOM\TextResultDOM;
 use Integrated\Behat\Helper\Regex\ReformatRegex;
 
 use Behat\Mink\Exception\ExpectationException;
@@ -50,10 +49,32 @@ trait Text
     }
 
     /**
+     * @Given /^I should not see regex "(.*)"$/
+     *
+     * @param string $regex
+     * @thorws ExpectationException
+     */
+    public function iShouldNotSeeRegex($regex)
+    {
+        if (0 !== preg_match(ReformatRegex::spaceTabsEqual(sprintf('/%s/', $regex)), trim(strip_tags($this->getSession()->getPage()->getContent())))) {
+            // Matches meaning we have found what were looking for
+            throw new ExpectationException(
+                sprintf(
+                    'The content %s should not be found on %s',
+                    $regex,
+                    $this->getSession()->getCurrentUrl()
+                ),
+                $this->getSession()->getDriver()
+            );
+        }
+    }
+
+    /**
      * @Given /^I should see in xpath "(.*)" regex "(.*)"$/
      *
      * @param string $xpath
      * @param string $regex
+     * @thorws ExpectationException
      */
     public function iShouldSeeTextInXpath($xpath, $regex)
     {
