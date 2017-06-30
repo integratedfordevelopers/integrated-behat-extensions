@@ -31,13 +31,14 @@ trait SymfonyLogin
     public abstract function getSession($name = null);
 
     /**
-     * @Given /^I am authenticated as "([^\s]|[^\ ]*)"$
+     * @Given /^I am authenticated as "([^\s]|[^\ ]*)" in firewall "([^"]+)"$/
      *
      * @param string $username
+     * @param string $firewall
      * @throws UnsupportedDriverActionException
      * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
-    public function iAmAuthenticatedAs($username)
+    public function iAmAuthenticatedAsInFirewall($username, $firewall)
     {
         $driver = $this->getSession()->getDriver();
         if (!$driver instanceof BrowserKitDriver) {
@@ -54,8 +55,8 @@ trait SymfonyLogin
         if ($user = $client->getContainer()->get('integrated_user.user.manager')->findByUsername($username)) {
             $session = $client->getContainer()->get('session');
 
-            $token = new UsernamePasswordToken($user, null, 'default', $user->getRoles());
-            $session->set('_security_default', serialize($token));
+            $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
+            $session->set(sprintf('_security_%s', $firewall), serialize($token));
             $session->save();
 
             $cookie = new Cookie($session->getName(), $session->getId());
