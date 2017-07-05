@@ -64,11 +64,11 @@ trait BackgroundIntegrated
         $application = new Application(KernelSymfony::getContainer($this->getSession())->get('kernel'));
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'command' => 'solr:indexer:run',
             '--blocking' => true,
             '--env' => 'prod'
-        ));
+        ]);
         
         $output = new BufferedOutput();
         $application->run($input, $output);
