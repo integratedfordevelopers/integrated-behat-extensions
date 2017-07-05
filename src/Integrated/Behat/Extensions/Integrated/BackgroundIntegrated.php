@@ -72,8 +72,6 @@ trait BackgroundIntegrated
         
         $output = new BufferedOutput();
         $application->run($input, $output);
-
-        dump($output->fetch());
     }
 
     /**
