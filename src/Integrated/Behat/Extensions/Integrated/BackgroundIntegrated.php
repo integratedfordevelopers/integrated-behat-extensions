@@ -34,7 +34,7 @@ trait BackgroundIntegrated
     public abstract function getSession($name = null);
 
     /**
-     * @Then /^I wait until background processes are cleared$/
+     * @Then /^I wait until background processes are done$/
      */
     public function clearBackgroundProcesses()
     {
