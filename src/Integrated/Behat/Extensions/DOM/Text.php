@@ -35,7 +35,10 @@ trait Text
      */
     public function iShouldSeeRegex($regex)
     {
-        if (0 === preg_match(ReformatRegex::spaceTabsEqual(sprintf('/%s/', $regex)), trim(strip_tags($this->getSession()->getPage()->getContent())))) {
+        $actual = $this->getSession()->getPage()->getText();
+        $actual = preg_replace('/\s+/u', ' ', $actual);
+        
+        if (0 === preg_match(ReformatRegex::spaceTabsEqual(sprintf('/%s/', $regex)), $actual)) {
             // No matches meaning we havent found what were looking for
             throw new ExpectationException(
                 sprintf(
