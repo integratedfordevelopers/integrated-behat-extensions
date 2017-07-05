@@ -87,6 +87,22 @@ trait OverviewIntegrated
     }
 
     /**
+     * @When /^I click the link in the row with text "([^"]*)"$/
+     *
+     * @param string $text
+     * @throws ExpectationException
+     */
+    public function clickRowLink($text)
+    {
+        $this->clickNode(
+            sprintf(
+                '//tr//td[text()="%s"]/parent::tr/td/a',
+                $text
+            )
+        );
+    }
+
+    /**
      * @param string $xpath
      * @throws ExpectationException
      */
