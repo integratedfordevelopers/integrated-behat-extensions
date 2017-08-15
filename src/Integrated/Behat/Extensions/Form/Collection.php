@@ -27,7 +27,7 @@ trait Collection
     public abstract function getSession($name = null);
 
     /**
-     * @Given /^I fill the fields of "([^"]*)" with value "([^"]*)"$/
+     * @Given /^I fill the fields of collection "([^"]*)" with value "([^"]*)"$/
      *
      * @param string $name
      * @param string $value
