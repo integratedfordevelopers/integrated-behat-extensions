@@ -50,6 +50,30 @@ trait Element
     }
 
     /**
+     * @Given /^I should see an element with xpath "([\w\ \/\\\[\]\@\"=\-_]*)"$/
+     *
+     * @param string $xpath
+     * @throws ExpectationException
+     */
+    public function iShouldSeeAnElementWithXpath($xpath)
+    {
+        $result = $this->getSession()->getPage()->find('xpath', $xpath);
+
+        if (1 > count($result)) {
+            // The must be exacly on e element on the page, anything is not correct
+            throw new ExpectationException(
+                sprintf(
+                    'The xpath %s (on %s) returned %d elements',
+                    $xpath,
+                    $this->getSession()->getCurrentUrl(),
+                    count($result)
+                ),
+                $this->getSession()->getDriver()
+            );
+        }
+    }
+
+    /**
      * @Given /^I follow xpath "(.*)"$/
      *
      * @param string $xpath
