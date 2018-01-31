@@ -103,27 +103,6 @@ trait OverviewIntegrated
     }
 
     /**
-     * @Then /^I click on "([^"]*)"$/
-     *
-     * @param string $element
-     * @throws \Behat\Mink\Exception\ExpectationException
-     */
-    public function iClickOn($element)
-    {
-        $page = $this->getSession()->getPage();
-        $findName = $page->find("css", $element);
-
-        if (!$findName) {
-            throw new ExpectationException(
-                $element . " could not be found",
-                $this->getSession()->getDriver()
-            );
-        }
-
-        $findName->click();
-    }
-
-    /**
      * @param string $xpath
      * @throws ExpectationException
      */
