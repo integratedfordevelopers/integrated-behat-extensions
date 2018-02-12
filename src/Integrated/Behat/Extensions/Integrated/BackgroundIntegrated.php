@@ -27,6 +27,14 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 trait BackgroundIntegrated
 {
+    protected $allowedChannels = [
+        'solr-indexer',
+        'statistic_year_rating',
+        'published_changed_queue',
+        'score',
+        'disease-score',
+    ];
+
     /**
      * @param null $name
      * @return Session
@@ -36,22 +44,46 @@ trait BackgroundIntegrated
     /**
      * @Then /^I wait until background processes are done$/
      */
-    public function clearBackgroundProcesses()
+    public function clearBackgroundProcesses($try = 1, $tries = 20)
     {
         $queueChannels = $this->getQueueChannels();
 
-        foreach ($queueChannels as $channel) {
+        if (!$channels = array_intersect($queueChannels, $this->allowedChannels)) {
+            return true;
+        }
+
+        foreach ($channels as $channel) {
             $this->clearQueue($channel['channel']);
         }
+
+        if ($try < $tries) {
+            $this->clearBackgroundProcesses(++$try);
+        }
+
+        return false;
     }
 
     /**
-     * @param String $channel
+     * @param string $channel
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+     * @throws \Exception
      */
     protected function clearQueue($channel)
     {
         if ('solr-indexer' === $channel) {
             $this->clearSolrQueue();
+        }
+        if ('statistic_year_rating' === $channel) {
+            $this->clearStatisticYearQueue();
+        }
+        if ('published_changed_queue' === $channel) {
+            $this->clearPublishedQueue();
+        }
+        if ('score' === $channel) {
+            $this->clearScoreQueue();
+        }
+        if ('disease-score' === $channel) {
+            $this->clearDiseaseScoreQueue();
         }
     }
 
@@ -61,21 +93,84 @@ trait BackgroundIntegrated
      */
     protected function clearSolrQueue()
     {
-        $application = new Application(KernelSymfony::getContainer($this->getSession())->get('kernel'));
-        $application->setAutoExit(false);
-
         $input = new ArrayInput([
             'command' => 'solr:indexer:run',
             '--blocking' => true,
-            '--env' => 'prod'
         ]);
         
+        $this->runCommand($input);
+    }
+
+    /**
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+     * @throws \Exception
+     */
+    protected function clearStatisticYearQueue()
+    {
+        $input = new ArrayInput([
+            'command' => 'statistic:year:calculate-rating'
+        ]);
+
+        $this->runCommand($input);
+    }
+
+    /**
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+     * @throws \Exception
+     */
+    protected function clearPublishedQueue()
+    {
+        $input = new ArrayInput([
+            'command' => 'zkn:published:update',
+            '--dequeue' => true
+        ]);
+
+        $this->runCommand($input);
+    }
+
+    /**
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+     * @throws \Exception
+     */
+    protected function clearScoreQueue()
+    {
+        $input = new ArrayInput([
+            'command' => 'zkn:calculate:score'
+        ]);
+
+        $this->runCommand($input);
+    }
+
+    /**
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+     * @throws \Exception
+     */
+    protected function clearDiseaseScoreQueue()
+    {
+        $input = new ArrayInput([
+            'command' => 'zkn:calculate:disease-score'
+        ]);
+
+        $this->runCommand($input);
+    }
+
+    /**
+     * @param ArrayInput $input
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+     * @throws \Exception
+     */
+    protected function runCommand(ArrayInput $input)
+    {
+        $application = new Application(KernelSymfony::getContainer($this->getSession())->get('kernel'));
+        $application->setAutoExit(false);
+
         $output = new BufferedOutput();
         $application->run($input, $output);
     }
 
     /**
      * @return array
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
      * @throws \Doctrine\DBAL\DBALException
      */
     protected function getQueueChannels()
@@ -84,7 +179,8 @@ trait BackgroundIntegrated
     }
 
     /**
-     * @return Connection
+     * @return Connection|object
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
      */
     private function getConnection()
     {
