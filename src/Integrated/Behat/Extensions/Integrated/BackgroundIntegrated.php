@@ -53,7 +53,7 @@ trait BackgroundIntegrated
         }
 
         foreach ($channels as $channel) {
-            $this->clearQueue($channel['channel']);
+            $this->clearQueue($channel);
         }
 
         if ($try < $tries) {
@@ -93,12 +93,18 @@ trait BackgroundIntegrated
      */
     protected function clearSolrQueue()
     {
-        $input = new ArrayInput([
+        $this->runCommand(new ArrayInput([
+            'command' => 'solr:indexer:queue --commit'
+        ]));
+
+        $this->runCommand(new ArrayInput([
             'command' => 'solr:indexer:run',
             '--blocking' => true,
-        ]);
-        
-        $this->runCommand($input);
+        ]));
+
+        $this->runCommand(new ArrayInput([
+            'command' => 'solr:indexer:queue --commit'
+        ]));
     }
 
     /**
@@ -121,8 +127,7 @@ trait BackgroundIntegrated
     protected function clearPublishedQueue()
     {
         $input = new ArrayInput([
-            'command' => 'zkn:published:update',
-            '--dequeue' => true
+            'command' => 'zkn:published:update --dequeue'
         ]);
 
         $this->runCommand($input);
@@ -175,7 +180,16 @@ trait BackgroundIntegrated
      */
     protected function getQueueChannels()
     {
-        return $this->getConnection()->query('SELECT channel FROM queue GROUP BY channel')->fetchAll();
+        $channels = [];
+        $results = $this->getConnection()->query('SELECT channel FROM queue GROUP BY channel')->fetchAll();
+
+        foreach ($results as $result) {
+            if (($channel = $result['channel']) && in_array($channel, $this->allowedChannels)) {
+                $channels[] = $channel;
+            }
+        }
+
+        return $channels;
     }
 
     /**
