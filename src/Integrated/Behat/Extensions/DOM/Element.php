@@ -35,14 +35,13 @@ trait Element
     {
         $result = $this->getSession()->getPage()->find('xpath', $xpath);
 
-        if (1 !== count($result)) {
-            // The must be exacly on e element on the page, anything is not correct
+        if (is_null($result)) {
+            // There must be exactly one element on the page, anything else is not correct
             throw new ExpectationException(
                 sprintf(
-                    'The xpath %s (on %s) returned %d elements',
+                    'The xpath %s (on %s) returned no elements',
                     $xpath,
-                    $this->getSession()->getCurrentUrl(),
-                    count($result)
+                    $this->getSession()->getCurrentUrl()
                 ),
                 $this->getSession()->getDriver()
             );
@@ -59,14 +58,12 @@ trait Element
     {
         $result = $this->getSession()->getPage()->find('xpath', $xpath);
 
-        if (1 > count($result)) {
-            // The must be exacly on e element on the page, anything is not correct
+        if (is_null($result)) {
             throw new ExpectationException(
                 sprintf(
-                    'The xpath %s (on %s) returned %d elements',
+                    'The xpath %s (on %s) returned no elements',
                     $xpath,
-                    $this->getSession()->getCurrentUrl(),
-                    count($result)
+                    $this->getSession()->getCurrentUrl()
                 ),
                 $this->getSession()->getDriver()
             );
@@ -77,19 +74,20 @@ trait Element
      * @Given /^I follow xpath "(.*)"$/
      *
      * @param string $xpath
+     *
+     * @throws ExpectationException
      */
     public function iFollowXpath($xpath)
     {
         $result = $this->getSession()->getPage()->find('xpath', $xpath);
 
-        if (1 !== count($result)) {
+        if (is_null($result)) {
             // We did not find the link or we've found more than we want
             throw new ExpectationException(
                 sprintf(
-                    'The xpath %s (on %s) returned %d elements',
+                    'The xpath %s (on %s) returned no elements',
                     $xpath,
-                    $this->getSession()->getCurrentUrl(),
-                    count($result)
+                    $this->getSession()->getCurrentUrl()
                 ),
                 $this->getSession()->getDriver()
             );

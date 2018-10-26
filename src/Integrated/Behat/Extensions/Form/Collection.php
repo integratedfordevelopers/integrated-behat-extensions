@@ -41,7 +41,7 @@ trait Collection
             $name
         ));
 
-        if (0 === count($nodeElements)) {
+        if (!is_array($nodeElements) || 0 === count($nodeElements)) {
             throw new ExpectationException(
                 sprintf('No input with the name "%s" is not found.', $name),
                 $this->getSession()->getDriver()
