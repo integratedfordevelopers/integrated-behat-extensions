@@ -79,7 +79,7 @@ trait Text
      *
      * @param string $xpath
      * @param string $regex
-     * @throws  ExpectationException
+     * @throws ExpectationException
      */
     public function iShouldSeeTextInXpath($xpath, $regex)
     {
