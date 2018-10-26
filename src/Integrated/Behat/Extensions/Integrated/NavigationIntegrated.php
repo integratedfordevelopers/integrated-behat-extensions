@@ -36,7 +36,7 @@ trait NavigationIntegrated
         $this->getSession()->visit('/admin/content');
         $contentTypes = $this->getSession()->getPage()->findAll('xpath', '//div[@class="megamenu-content"]//li');
 
-        if (count($contentTypes)) {
+        if (is_array($contentTypes) && count($contentTypes)) {
             // Put the content type here
             $_element = null;
 

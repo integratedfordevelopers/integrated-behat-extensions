@@ -38,7 +38,7 @@ trait Select
         /** @var NodeElement[] $nodeElements */
         $nodeElements = $this->getSession()->getPage()->findAll('xpath', sprintf('//select[@id="%s"]/option', $id));
 
-        if (0 === count($nodeElements)) {
+        if (!is_array($nodeElements) || 0 === count($nodeElements)) {
             throw new ExpectationException(
                 sprintf('The select with id "%s" is not found or has no options.', $id),
                 $this->getSession()->getDriver()

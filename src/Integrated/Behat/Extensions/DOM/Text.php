@@ -31,7 +31,8 @@ trait Text
      * @Given /^I should see regex "(.*)"$/
      *
      * @param string $regex
-     * @thorws ExpectationException
+     *
+     * @throws ExpectationException
      */
     public function iShouldSeeRegex($regex)
     {
@@ -39,7 +40,7 @@ trait Text
         $actual = preg_replace('/\s+/u', ' ', $actual);
         
         if (0 === preg_match(ReformatRegex::spaceTabsEqual(sprintf('/%s/', $regex)), $actual)) {
-            // No matches meaning we havent found what were looking for
+            // No matches meaning we haven't found what were looking for
             throw new ExpectationException(
                 sprintf(
                     'The content %s can not be found on %s',
@@ -55,7 +56,8 @@ trait Text
      * @Given /^I should not see regex "(.*)"$/
      *
      * @param string $regex
-     * @thorws ExpectationException
+     *
+     * @throws ExpectationException
      */
     public function iShouldNotSeeRegex($regex)
     {
@@ -77,19 +79,18 @@ trait Text
      *
      * @param string $xpath
      * @param string $regex
-     * @thorws ExpectationException
+     * @throws ExpectationException
      */
     public function iShouldSeeTextInXpath($xpath, $regex)
     {
         $result = $this->getSession()->getPage()->find('xpath', $xpath);
 
-        if (1 !== count($result)) {
+        if (is_null($result)) {
             // We should only have one element
             throw new ExpectationException(
                 sprintf(
-                    'The xpath %s returned %d results on %s',
+                    'The xpath %s returned no results on %s',
                     $xpath,
-                    is_null($result) ? 0 : count($result),
                     $this->getSession()->getCurrentUrl()
                 ),
                 $this->getSession()->getDriver()

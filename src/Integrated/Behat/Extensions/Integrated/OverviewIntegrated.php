@@ -38,7 +38,7 @@ trait OverviewIntegrated
             '//ul[@class="pagination"]'
         );
 
-        if (0 === count($nodeElement)) {
+        if (is_null($nodeElement)) {
             throw new ExpectationException(
                 'No pagination found on the page (//ul[@class="pagination"])',
                 $this->getSession()->getDriver()
